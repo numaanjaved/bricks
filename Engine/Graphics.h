@@ -24,6 +24,8 @@
 #include <wrl.h>
 #include "ChiliException.h"
 #include "Colors.h"
+#include "Vec2.h"
+#include "RectF.h"
 
 class Graphics
 {
@@ -59,6 +61,8 @@ public:
 	void PutPixel( int x,int y,Color c );
 	void DrawRect(int x0, int y0, int x1, int y1, Color c);
 	void DrawRectDim(int x, int y, int width, int height, Color c);
+	void DrawRect(Vec2 firstPoint, Vec2 lastPoint, Color color);
+	void DrawRect(RectF rect, Color color);
 	void DrawCircle(int x, int y, int radius, Color c);
 	~Graphics();
 private:

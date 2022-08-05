@@ -342,6 +342,16 @@ void Graphics::DrawRectDim(int x, int y, int width, int height, Color c) {
 	DrawRect(x, y, x + width, y + height, c);
 }
 
+void Graphics::DrawRect(Vec2 firstPoint, Vec2 lastPoint, Color color)
+{
+	DrawRect(firstPoint.x, firstPoint.y, lastPoint.x, lastPoint.y, color);
+}
+
+void Graphics::DrawRect(RectF rect, Color color)
+{
+	DrawRect(rect.left, rect.top, rect.right, rect.bottom, color);
+}
+
 //////////////////////////////////////////////////
 //           Graphics Exception
 Graphics::Exception::Exception( HRESULT hr,const std::wstring& note,const wchar_t* file,unsigned int line )
