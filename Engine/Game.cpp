@@ -53,46 +53,56 @@ void Game::Go()
 void Game::UpdateModel()
 {
 	float dt = ft.mark();
-	if (ball.isCollidingWIthWall(walls) == 3) {
-		gameOver = true;
-	}
-	else {
-		pedal.isCoolDown();
-	}
-	ball.update(dt);
-	int indexRowBrk;
-	int indexColBrk;
-	float distCenterBrick;
-	bool collisionDetected = false;
-	for (int i = 0; i < noOfCols; ++i) {
-		for (int j = 0; j < noOfRows; ++j) {
-			if (brk[j][i].isCollidingWithBall(ball)) {
-				
-				const float newDistCenterBrick = (ball.getPos() - brk[j][i].getCenter()).getLengthSq();
-				if (collisionDetected == true) {
-					if (newDistCenterBrick < distCenterBrick) {
+	
+	if (isStarted == true) {
+		if (ball.isCollidingWIthWall(walls) == 3) {
+			gameOver = true;
+			isStarted = false;
+		}
+		else {
+			pedal.isCoolDown();
+		}
+		
+		ball.update(dt);
+		int indexRowBrk;
+		int indexColBrk;
+		float distCenterBrick;
+		bool collisionDetected = false;
+		for (int i = 0; i < noOfCols; ++i) {
+			for (int j = 0; j < noOfRows; ++j) {
+				if (brk[j][i].isCollidingWithBall(ball)) {
+					const float newDistCenterBrick = (ball.getPos() - brk[j][i].getCenter()).getLengthSq();
+					if (collisionDetected == true) {
+						if (newDistCenterBrick < distCenterBrick) {
+							distCenterBrick = newDistCenterBrick;
+							indexRowBrk = j;
+							indexColBrk = i;
+						}
+					}
+					else {
 						distCenterBrick = newDistCenterBrick;
 						indexRowBrk = j;
 						indexColBrk = i;
+						collisionDetected = true;
 					}
-				}
-				else {
-					distCenterBrick = newDistCenterBrick;
-					indexRowBrk = j;
-					indexColBrk = i;
-					collisionDetected = true;
 				}
 			}
 		}
+		if (collisionDetected == true) {
+			pedal.isCoolDown();
+			brk[indexRowBrk][indexColBrk].executeCollisionWithBall(ball);
+		}
+
+		pedal.isCollidingWithWalls(walls);
+		pedal.isCollidingWithBall(ball);
+		pedal.update(wnd.kbd, dt);
 	}
-	if (collisionDetected == true) {
-		pedal.isCoolDown();
-		brk[indexRowBrk][indexColBrk].executeCollisionWithBall(ball);
+	else {
+		if (wnd.kbd.KeyIsPressed(VK_RETURN)) {
+			isStarted = true;
+			gameOver = false;
+		}
 	}
-	
-	pedal.isCollidingWithWalls(walls);
-	pedal.isCollidingWithBall(ball);
-	pedal.update(wnd.kbd, dt);
 }
 
 void Game::ComposeFrame()
