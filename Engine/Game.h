@@ -24,6 +24,10 @@
 #include "Mouse.h"
 #include "Graphics.h"
 #include "Brick.h"
+#include "Ball.h"
+#include "Paddle.h"
+#include "FrameTimer.h"
+#include "Title.h"
 
 class Game
 {
@@ -44,4 +48,16 @@ private:
 	/********************************/
 	/*  User Variables              */
 	/********************************/
+	static constexpr int noOfRows = 4; 
+	static constexpr int noOfCols = 14;
+	static constexpr float brickWidth = 50.0f;
+	static constexpr float brickHeight = 20.0f;
+	Ball ball;
+	FrameTimer ft;
+	RectF walls;
+	Brick brk[noOfRows][noOfCols];
+	Paddle pedal;
+	bool gameOver = false;
+	bool isStarted = false;
+	Title startScreen;
 };
