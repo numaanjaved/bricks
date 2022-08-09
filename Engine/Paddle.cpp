@@ -1,7 +1,9 @@
 #include "Paddle.h"
 
 Paddle::Paddle(Vec2 posInput, float halfWidthInput, float halfHeightInput)
-	:pos(posInput), halfWidth(halfWidthInput), halfHeight(halfHeightInput)
+	:pos(posInput), halfWidth(halfWidthInput), halfHeight(halfHeightInput),
+	xFactor(maximumExitRatio / halfWidth), fixedZoneHalfWidth(halfWidth * fixedZoneWidthRatio),
+	fixedZoneBoundX(fixedZoneHalfWidth * xFactor)
 {}
 
 void Paddle::draw(Graphics & gfx) const
@@ -22,12 +24,11 @@ bool Paddle::isCollidingWithBall(Ball& ball)
 			if (signbit(ball.getVelocity().x) == signbit((ballPos - pos).x) || ballPos.x >= rect.left && ballPos.x <= rect.right) {
 				Vec2 dir;
 				const float difference = ballPos.x - pos.x;
-				float fixedXComponent = fixedZoneHalfWidth * xFactor;
 				if (std::abs(difference) < fixedZoneHalfWidth) {
 					if (difference < 0.0f) {
-						fixedXComponent = -fixedXComponent;
+						fixedZoneBoundX = -fixedZoneBoundX;
 					}
-					dir = Vec2( fixedXComponent, -1.0f);
+					dir = Vec2( fixedZoneBoundX, -1.0f);
 				}
 				dir = Vec2(difference * xFactor, -1.0f);
 				ball.setDirection(dir);

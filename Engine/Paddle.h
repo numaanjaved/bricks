@@ -22,8 +22,14 @@ private:
 	Color color = Colors::White;
 	float speed = 300.0f;
 	static constexpr float wingWidth = 10.0f;
-	float xFactor = 0.045f;
-	float fixedZoneHalfWidth = 14.0f;
+	float xFactor;
+	float fixedZoneHalfWidth;
+	float fixedZoneBoundX;
+	
+	float maximumExitRatio = 2.6f;
+	float fixedZoneWidthRatio = 0.2f;
+
+
 	float halfWidth;
 	float halfHeight;
 	Vec2 pos;
