@@ -38,7 +38,6 @@ Game::Game(MainWindow& wnd)
 			Vec2 gridStart(rowStartPoint, colStartPoint);
 			brk[j][i] = Brick(RectF(start + gridStart, brickWidth, brickHeight), colorsOfBrick[j]);
 		}
-		
 	}
 }
 
@@ -54,71 +53,60 @@ void Game::UpdateModel()
 {
 	float dt = ft.mark();
 	
-	if (isStarted == true) {
-		if (ball.isCollidingWIthWall(walls) == 3) {
-			gameOver = true;
-			isStarted = false;
-		}
-		else {
-			pedal.isCoolDown();
-		}
-		
-		ball.update(dt);
-		int indexRowBrk;
-		int indexColBrk;
-		float distCenterBrick;
-		bool collisionDetected = false;
-		for (int i = 0; i < noOfCols; ++i) {
-			for (int j = 0; j < noOfRows; ++j) {
-				if (brk[j][i].isCollidingWithBall(ball)) {
-					const float newDistCenterBrick = (ball.getPos() - brk[j][i].getCenter()).getLengthSq();
-					if (collisionDetected == true) {
-						if (newDistCenterBrick < distCenterBrick) {
-							distCenterBrick = newDistCenterBrick;
-							indexRowBrk = j;
-							indexColBrk = i;
+		if (gameOver == false) {
+			if (ball.isCollidingWIthWall(walls) == 3) {
+				gameOver = true;
+			}
+			else {
+				pedal.isCoolDown();
+				ball.update(dt);
+				int indexRowBrk;
+				int indexColBrk;
+				float distCenterBrick;
+				bool collisionDetected = false;
+				for (int i = 0; i < noOfCols; ++i) {
+					for (int j = 0; j < noOfRows; ++j) {
+						if (brk[j][i].isCollidingWithBall(ball)) {
+							const float newDistCenterBrick = (ball.getPos() - brk[j][i].getCenter()).getLengthSq();
+							if (collisionDetected == true) {
+								if (newDistCenterBrick < distCenterBrick) {
+									distCenterBrick = newDistCenterBrick;
+									indexRowBrk = j;
+									indexColBrk = i;
+								}
+							}
+							else {
+								distCenterBrick = newDistCenterBrick;
+								indexRowBrk = j;
+								indexColBrk = i;
+								collisionDetected = true;
+							}
 						}
 					}
-					else {
-						distCenterBrick = newDistCenterBrick;
-						indexRowBrk = j;
-						indexColBrk = i;
-						collisionDetected = true;
-					}
 				}
+				if (collisionDetected == true) {
+					pedal.isCoolDown();
+					brk[indexRowBrk][indexColBrk].executeCollisionWithBall(ball);
+				}
+				pedal.isCollidingWithWalls(walls);
+				pedal.isCollidingWithBall(ball);
+				pedal.update(wnd.kbd, dt);
 			}
 		}
-		if (collisionDetected == true) {
-			pedal.isCoolDown();
-			brk[indexRowBrk][indexColBrk].executeCollisionWithBall(ball);
-		}
-
-		pedal.isCollidingWithWalls(walls);
-		pedal.isCollidingWithBall(ball);
-		pedal.update(wnd.kbd, dt);
-	}
-	else {
-		if (wnd.kbd.KeyIsPressed(VK_RETURN)) {
-			isStarted = true;
-			gameOver = false;
-		}
-	}
 }
 
 void Game::ComposeFrame()
 {
-	if (isStarted == false) {
-		Title::draw(gfx);
-	}
-	if (isStarted == true && gameOver == false) {
-		ball.draw(gfx);
-		for (int i = 0; i < noOfCols; ++i) {
-			for (int j = 0; j < noOfRows; ++j) {
-				brk[j][i].draw(gfx);
+	if (gameOver == false) {
+			ball.draw(gfx);
+			for (int i = 0; i < noOfCols; ++i) {
+				for (int j = 0; j < noOfRows; ++j) {
+					brk[j][i].draw(gfx);
+				}
 			}
-		}
-		pedal.draw(gfx);
+			pedal.draw(gfx);
 	}
-	
-	
+	else {
+		finished.draw(gfx);
+	}
 }

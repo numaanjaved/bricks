@@ -28,6 +28,7 @@
 #include "Paddle.h"
 #include "FrameTimer.h"
 #include "Title.h"
+#include "GameOver.h"
 
 class Game
 {
@@ -60,4 +61,5 @@ private:
 	bool gameOver = false;
 	bool isStarted = false;
 	Title startScreen;
+	GameOver finished;
 };
