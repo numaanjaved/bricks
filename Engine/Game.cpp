@@ -25,7 +25,7 @@ Game::Game(MainWindow& wnd)
 	:
 	wnd(wnd),
 	gfx(wnd),
-	ball(Vec2(400.0f, 300.0f), Vec2(-200.0f, -200.0f), Colors::Red),
+	ball(Vec2(400.0f, 300.0f), Vec2(-1.0f, -1.0f), Colors::Red),
 	walls(10.0f, 10.0f, float(Graphics::ScreenWidth) - 10.0f, float(Graphics::ScreenHeight) - 10.0f),
 	pedal(Vec2(500.0f, 500.0f), 50.0f, 10.0f)
 {
@@ -99,14 +99,15 @@ void Game::ComposeFrame()
 {
 	if (gameOver == false) {
 			ball.draw(gfx);
-			for (int i = 0; i < noOfCols; ++i) {
-				for (int j = 0; j < noOfRows; ++j) {
-					brk[j][i].draw(gfx);
-				}
-			}
+			
 			pedal.draw(gfx);
 	}
 	else {
 		finished.draw(gfx);
+	}
+	for (int i = 0; i < noOfCols; ++i) {
+		for (int j = 0; j < noOfRows; ++j) {
+			brk[j][i].draw(gfx);
+		}
 	}
 }

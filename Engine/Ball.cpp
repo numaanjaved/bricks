@@ -1,8 +1,10 @@
 #include "Ball.h"
 
-Ball::Ball(const Vec2& posInput, const Vec2& velInput, const Color colorInput):
-	pos(posInput), vel(velInput), color(colorInput)
-{}
+Ball::Ball(const Vec2& posInput, const Vec2& dirInput, const Color colorInput):
+	pos(posInput), color(colorInput)
+{
+	setDirection(dirInput);
+}
 
 void Ball::draw(Graphics & gfx) const
 {
@@ -69,4 +71,9 @@ void Ball::reboundX()
 void Ball::reboundY()
 {
 	vel.y = -vel.y;
+}
+
+void Ball::setDirection(const Vec2& dir)
+{
+	vel = dir.getNormalized() * speed;
 }

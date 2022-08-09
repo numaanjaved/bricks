@@ -19,11 +19,18 @@ bool Paddle::isCollidingWithBall(Ball& ball)
 		RectF rect = getRect();
 		if (ball.getVelocity().y > 0.0f && rect.isCollidingWith(ball.getRect())) {
 			Vec2 ballPos = ball.getPos();
-			if (signbit(ball.getVelocity().x) == signbit((ballPos - pos).x)) {
-				ball.reboundY();
-			}
-			else if (ballPos.x >= rect.left && ballPos.x <= rect.right) {
-				ball.reboundY();
+			if (signbit(ball.getVelocity().x) == signbit((ballPos - pos).x) || ballPos.x >= rect.left && ballPos.x <= rect.right) {
+				Vec2 dir;
+				const float difference = ballPos.x - pos.x;
+				float fixedXComponent = fixedZoneHalfWidth * xFactor;
+				if (std::abs(difference) < fixedZoneHalfWidth) {
+					if (difference < 0.0f) {
+						fixedXComponent = -fixedXComponent;
+					}
+					dir = Vec2( fixedXComponent, -1.0f);
+				}
+				dir = Vec2(difference * xFactor, -1.0f);
+				ball.setDirection(dir);
 			}
 			else {
 				ball.reboundX();
